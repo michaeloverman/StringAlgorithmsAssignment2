@@ -1,5 +1,4 @@
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
@@ -28,101 +27,86 @@ public class InverseBWT {
     private int cCounter;
     private int gCounter;
     private int tCounter;
-//    private int sCounter;
 
-    private int[] countCharPositions(char[] arr) {
-        int[] result = new int[arr.length];
+    private void countCharPositions(String string) {
+        lastColumn = new char[string.length()];
+        lastToFirst = new int[string.length()];
         aCounter = 0;
         cCounter = 0;
         gCounter = 0;
         tCounter = 0;
-//        sCounter = 0;
 
-        for (int i = 0; i < arr.length; i++) {
-            switch(arr[i]) {
+        for (int i = 0; i < string.length(); i++) {
+            switch(lastColumn[i] = string.charAt(i)) {
                 case 'A':
-                    result[i] = ++aCounter;
+                    lastToFirst[i] = ++aCounter;
                     break;
                 case 'C':
-                    result[i] = ++cCounter;
+                    lastToFirst[i] = ++cCounter;
                     break;
                 case 'G':
-                    result[i] = ++gCounter;
+                    lastToFirst[i] = ++gCounter;
                     break;
                 case 'T':
-                    result[i] = ++tCounter;
+                    lastToFirst[i] = ++tCounter;
                     break;
-//                case '$':
-//                    sCounter++;
-//                    break;
                 default:
             }
         }
         cCounter += aCounter;
         gCounter += cCounter;
-//
-
-        return result;
     }
+    private char[] lastColumn;
+    private int[] lastToFirst;
+//    private void printArrays() {
+//        for(int i = 0; i < lastColumn.length; i++) {
+//            System.out.print(lastColumn[i] + " ");
+//            System.out.println(lastToFirst[i] + " ");
+//        }
+////        System.out.println("");
+////        for(int i = 0; i < lastColumn.length; i++) {
+////        }
+////        System.out.println("");
+//        System.out.println("C offset: " + aCounter);
+//        System.out.println("G offset: " + cCounter);
+//        System.out.println("T offset: " + gCounter);
+//    }
     String inverseBWT(String bwt) {
         StringBuilder result = new StringBuilder();
         result.append('$');
         // write your code here
-        char[] lastColumn = bwt.toCharArray();
-
-        int[] nextOccurence = countCharPositions(lastColumn);
+        countCharPositions(bwt);
 
         int pointer = 0;
 
         for(int i = 0; i < lastColumn.length - 1; i++) {
             char nextChar = lastColumn[pointer];
-            result.insert(0, nextChar);
-//            firstColumn[pointer] = '.';
+            result.append(nextChar);
+            pointer = lastToFirst[pointer];
             switch(nextChar) {
-                case 'A':
-                    pointer = nextOccurence[pointer];
-                    break;
                 case 'C':
-                    pointer = nextOccurence[pointer] + aCounter;
+                    pointer += aCounter;
                     break;
                 case 'G':
-                    pointer = nextOccurence[pointer] + cCounter;
+                    pointer += cCounter;
                     break;
                 case 'T':
-                    pointer = nextOccurence[pointer] + gCounter;
+                    pointer += gCounter;
                     break;
                 default:
             }
-//            pointer = nextOccurence[pointer];
         }
 
-
-        return result.toString();
+        return result.reverse().toString();
     }
 
-    private int indexOf(char c, int position) {
-        int p = 1;
-        switch(c) {
-            case 'T':
-                p += gCounter;
-            case 'G':
-                p += cCounter;
-            case 'C':
-                p += aCounter;
-            case 'A':
-                p += position;
-                return p;
-            default:
-        }
-        return -1;
-    }
 
     static public void main(String[] args) throws IOException {
-        System.setIn(new FileInputStream("data/bwtinverse/testfile100K"));
-        long start = System.nanoTime();
+//        System.setIn(new FileInputStream("data/bwtinverse/sample3"));
+//        long start = System.nanoTime();
         new InverseBWT().run();
-        double duration = (System.nanoTime() - start) / 1000000000.0;
-        System.out.println("Time for completion: " + duration);
+//        double duration = (System.nanoTime() - start) / 1000000000.0;
+//        System.out.println("Time for completion: " + duration);
     }
 
     public void run() throws IOException {

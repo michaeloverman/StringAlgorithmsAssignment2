@@ -43,7 +43,7 @@ public class BurrowsWheelerTransform {
     }
 
     static public void main(String[] args) throws IOException {
-        System.setIn(new FileInputStream("data/bwtinverse/testfile"));
+        System.setIn(new FileInputStream("data/bwtinverse/testfile1K"));
         new BurrowsWheelerTransform().run();
     }
 
