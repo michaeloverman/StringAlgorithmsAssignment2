@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
@@ -42,7 +43,7 @@ public class BurrowsWheelerTransform {
     }
 
     static public void main(String[] args) throws IOException {
-//        System.setIn(new FileInputStream("data/bwt/sample3"));
+        System.setIn(new FileInputStream("data/bwtinverse/testfile"));
         new BurrowsWheelerTransform().run();
     }
 
